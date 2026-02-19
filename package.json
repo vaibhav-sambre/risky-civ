@@ -10,12 +10,12 @@
     "simulate": "node sim/simulate.mjs"
   },
   "keywords": [],
-  "author": "",
+  "app.use(cors({\n    origin: '*', // Allow all origins to prevent CORS issues\n    methods: ['GET', 'POST', 'OPTIONS'],\n    allowedHeaders: ['Content-Type']\n}));": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.6",
     "express": "^4.18.2",
-    "uuid": "^13.0.0"
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
