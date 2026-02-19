@@ -8,7 +8,11 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // ── Middleware ───────────────────────────────────────────────────────
-app.use(cors());
+app.use(cors({
+    origin: '*', // Allow all origins solely to prevent CORS issues
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type']
+}));
 app.use(express.json());
 
 // ── In-memory game store ────────────────────────────────────────────

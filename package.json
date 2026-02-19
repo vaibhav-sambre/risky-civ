@@ -10,7 +10,7 @@
     "simulate": "node sim/simulate.mjs"
   },
   "keywords": [],
-  "app.use(cors({\n    origin: '*', // Allow all origins to prevent CORS issues\n    methods: ['GET', 'POST', 'OPTIONS'],\n    allowedHeaders: ['Content-Type']\n}));": "",
+  "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.6",
