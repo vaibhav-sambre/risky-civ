@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Risky Civ — Conquer & Build</title>
+  <meta name="description"
+    content="A turn-based strategy game combining Risk-style territory conquest with Civilization-style resource management and a card system.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <!-- ── Intro Screen ──────────────────────────────────────── -->
+  <div id="intro-screen" class="intro-screen">
+    <div class="intro-content">
+      <h1 class="intro-title">RISKY<span>CIV</span></h1>
+      <p class="intro-subtitle">Conquer territories. Build your empire. Outsmart the AI.</p>
+
+      <div class="intro-tabs">
+        <button class="intro-tab active" data-tab="overview">🎯 Overview</button>
+        <button class="intro-tab" data-tab="actions">⚡ Actions</button>
+        <button class="intro-tab" data-tab="resources">📦 Resources</button>
+        <button class="intro-tab" data-tab="combat">⚔️ Combat</button>
+        <button class="intro-tab" data-tab="winning">🏆 Winning</button>
+      </div>
+
+      <div class="intro-tab-content active" id="tab-overview">
+        <div class="rules-grid">
+          <div class="rule-card">
+            <div class="rule-icon">🗺️</div>
+            <h3>Territory Control</h3>
+            <p>You and the AI each start with <strong>15 of 30</strong> territories on a procedurally generated map.
+              Expand by conquering enemy lands.</p>
+          </div>
+          <div class="rule-card">
+            <div class="rule-icon">🔄</div>
+            <h3>Turn Structure</h3>
+            <p>Each turn has two phases: <strong>Action Phase</strong> (spend 3 actions) then <strong>Attack
+                Phase</strong> (unlimited battles). After you, the AI takes its turn.</p>
+          </div>
+          <div class="rule-card">
+            <div class="rule-icon">🃏</div>
+            <h3>Card System</h3>
+            <p>You draw <strong>1 card per turn</strong> (up to 10). Cards grant powerful bonuses or impose penalties.
+              Playing a card costs <strong>1 action + 💰 money</strong>.</p>
+          </div>
+          <div class="rule-card">
+            <div class="rule-icon">🔬</div>
+            <h3>Tech Tree</h3>
+            <p>Spend 🔬 Research to unlock technologies across <strong>Military</strong>, <strong>Economic</strong>, and
+              <strong>Science</strong> branches. Each unlock costs <strong>1 action</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="intro-tab-content" id="tab-actions">
+        <div class="rules-list">
+          <div class="rule-item">
+            <span class="rule-bullet">1</span>
+            <div>
+              <h4>🪖 Deploy Troops</h4>
+              <p>Choose how many troops to deploy to any owned territory. Costs <strong>3 ⚙️ Production per
+                  troop</strong>. Uses 1 action.</p>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-bullet">2</span>
+            <div>
+              <h4>🏗️ Build Structure</h4>
+              <p>Build a <strong>Factory</strong> 🏭, <strong>University</strong> 🎓, or <strong>Bank</strong> 🏦 on an
+                owned territory. Each costs ⚙️ + 💰. Uses 1 action.</p>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-bullet">3</span>
+            <div>
+              <h4>🃏 Play a Card</h4>
+              <p>Play a card from your hand. All cards are positive — they cost 💰 money (shown on the card). Global
+                event cards trigger automatically when drawn and affect all players! Uses 1 action.</p>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-bullet">4</span>
+            <div>
+              <h4>🔬 Research Tech</h4>
+              <p>Unlock a technology from the tech tree using 🔬 Research points. Technologies provide permanent
+                upgrades. Uses 1 action.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="intro-tab-content" id="tab-resources">
+        <div class="rules-list">
+          <div class="rule-item">
+            <span class="rule-bullet">⚙️</span>
+            <div>
+              <h4>Production</h4>
+              <p><strong>+1 per territory</strong>, +2 per Factory. Spent on deploying troops (3 per troop) and building
+                structures.</p>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-bullet">🔬</span>
+            <div>
+              <h4>Research</h4>
+              <p><strong>+1 per territory</strong>, +2 per University. Spent on unlocking technologies in the tech tree.
+              </p>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-bullet">💰</span>
+            <div>
+              <h4>Money</h4>
+              <p><strong>+1 per territory</strong>, +2 per Bank. Spent on playing cards and building structures. Also
+                pays <strong>troop upkeep</strong> (0.5 per troop per turn).</p>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-bullet">🌍</span>
+            <div>
+              <h4>Continent Bonuses</h4>
+              <p>Control <strong>all territories in a continent</strong> for bonus resources each turn. Larger
+                continents give more rewards.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="intro-tab-content" id="tab-combat">
+        <div class="rules-list">
+          <div class="rule-item">
+            <span class="rule-bullet">🎲</span>
+            <div>
+              <h4>Dice Combat</h4>
+              <p>Attack with up to <strong>3 dice</strong>, defender rolls up to <strong>2 dice</strong>. Highest dice
+                are compared — ties go to the defender.</p>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-bullet">⚔️</span>
+            <div>
+              <h4>Attack Phase</h4>
+              <p>After spending your actions, enter the attack phase. Attack <strong>any adjacent enemy
+                  territory</strong> from your own. No limit on number of battles!</p>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-bullet">🛡️</span>
+            <div>
+              <h4>Garrison Rule</h4>
+              <p>Every territory must keep <strong>at least 1 troop</strong>. You can only attack with troops above the
+                minimum.</p>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-bullet">⚓</span>
+            <div>
+              <h4>Sea Routes & Continents</h4>
+              <p>The map is divided into <strong>island continents</strong> separated by sea. To attack across
+                continents via sea routes, you must research <strong>🚢 Naval Supremacy</strong> in the Military tech
+                tree.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="intro-tab-content" id="tab-winning">
+        <div class="rules-grid" style="grid-template-columns: 1fr 1fr;">
+          <div class="rule-card win-card">
+            <div class="rule-icon">🗺️</div>
+            <h3>Territory Domination</h3>
+            <p>Control <strong>75%</strong> of all territories (38 out of 50) to achieve military victory.</p>
+          </div>
+          <div class="rule-card win-card">
+            <div class="rule-icon">🔬</div>
+            <h3>World Domination Tech</h3>
+            <p>Research the ultimate <strong>World Domination</strong> technology at the end of the Science branch.
+              Requires 50 🔬.</p>
+          </div>
+        </div>
+        <div class="win-tip">
+          <p>💡 <strong>Pro Tip:</strong> Balance expansion with economy! Overextending without Banks for upkeep will
+            cause your troops to desert.</p>
+        </div>
+      </div>
+
+      <button id="start-game-btn" class="btn-start-game">
+        <span>⚔️ Begin Conquest</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="game-container" style="display: none;">
+    <!-- ── Left Panel ──────────────────────────────────────── -->
+    <aside id="left-panel">
+      <div class="panel-header">
+        <h1 class="game-title">RISKY<span>CIV</span></h1>
+      </div>
+
+      <div id="turn-counter" class="turn-badge">Turn 1</div>
+      <div id="phase-indicator" class="phase-badge action-phase">⚡ Action Phase</div>
+
+      <div class="resource-panel">
+        <div class="resource-row">
+          <span class="resource-icon">⚙️</span>
+          <span class="resource-label">Production</span>
+          <span class="resource-value" id="res-production">0</span>
+        </div>
+        <div class="resource-row">
+          <span class="resource-icon">🔬</span>
+          <span class="resource-label">Research</span>
+          <span class="resource-value" id="res-research">0</span>
+        </div>
+        <div class="resource-row">
+          <span class="resource-icon">💰</span>
+          <span class="resource-label">Money</span>
+          <span class="resource-value" id="res-money">0</span>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <span>🗺️ Territories</span>
+        <span id="territory-count">0 / 24</span>
+      </div>
+
+      <div class="section-label">Actions</div>
+      <div id="action-tokens" class="action-tokens"></div>
+
+      <button id="end-turn-btn" class="btn btn-attack">Start Attack Phase ⚔️</button>
+
+      <div class="section-label">Game Log</div>
+      <div id="game-log" class="game-log"></div>
+    </aside>
+
+    <!-- ── Center: Map ─────────────────────────────────────── -->
+    <main id="map-area">
+      <div id="map-container"></div>
+
+      <!-- Territory detail popup -->
+      <div id="territory-popup" class="popup"></div>
+
+      <!-- Combat dialog overlay -->
+      <div id="combat-dialog" class="overlay-dialog"></div>
+
+      <!-- Game over overlay -->
+      <div id="game-over" class="overlay-dialog"></div>
+    </main>
+
+    <!-- ── Right Panel ─────────────────────────────────────── -->
+    <aside id="right-panel">
+      <div class="panel-header">
+        <h2>🔬 Tech Tree</h2>
+      </div>
+      <div id="tech-tree" class="tech-tree"></div>
+    </aside>
+
+    <!-- ── Bottom Panel: Card Hand ─────────────────────────── -->
+    <footer id="bottom-panel">
+      <div class="card-hand-header">
+        <span>🃏 Your Hand</span>
+        <span id="hand-count" class="hand-count">0 / 10</span>
+      </div>
+      <div id="card-hand" class="card-hand"></div>
+    </footer>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+
+</html>
