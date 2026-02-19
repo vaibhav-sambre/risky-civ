@@ -1,13 +1,17 @@
 // ── Risky Civ — SVG Map Rendering ───────────────────────────────────
 
 import { PLAYER_COLORS, NEUTRAL_COLOR, STRUCTURES } from './config.js';
-import { getSeaRoutes } from './territories.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
 /** Create the SVG map and insert into container */
-export function renderMap(container, territories, onTerritoryClick) {
+export function renderMap(container, state, onTerritoryClick) {
     container.innerHTML = '';
+    const territories = state.territories;
+
+    // Safety check if seaRoutes exists
+    const seaRoutes = state.seaRoutes || [];
+
     const svg = document.createElementNS(SVG_NS, 'svg');
     svg.setAttribute('viewBox', '0 0 1020 600');
     svg.setAttribute('class', 'game-map');
@@ -60,7 +64,6 @@ export function renderMap(container, territories, onTerritoryClick) {
     }
 
     // ── Sea Routes (dashed lines between continents) ──
-    const seaRoutes = getSeaRoutes();
     for (const route of seaRoutes) {
         const line = document.createElementNS(SVG_NS, 'line');
         line.setAttribute('x1', Math.round(route.fromPos.x));

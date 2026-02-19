@@ -4,6 +4,11 @@ export const PLAYER_COLORS = ['#4A90D9', '#D94A4A'];
 export const PLAYER_NAMES = ['Player', 'AI'];
 export const NEUTRAL_COLOR = '#8B8B8B';
 
+// ── Backend Configuration ──────────────────────────────────────────
+export const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? 'http://localhost:3000'
+  : 'https://risky-civ-server.onrender.com'; // User must update this if differet
+
 // ── Resources ───────────────────────────────────────────────────────
 export const RESOURCE_TYPES = ['production', 'research', 'money'];
 export const STARTING_RESOURCES = { production: 10, research: 0, money: 15 };

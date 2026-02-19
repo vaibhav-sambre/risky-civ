@@ -2,15 +2,21 @@
 
 import {
     STRUCTURES, TECH_TREE, PLAYER_COLORS, PLAYER_NAMES,
-    WIN_TERRITORY_PERCENT, TOTAL_TERRITORIES
+    WIN_TERRITORY_PERCENT, TOTAL_TERRITORIES, BASE_ACTIONS_PER_TURN
 } from './config.js';
-import { getPlayerTerritories, getTerritory, getAdjacentEnemies, canAttackFrom } from './territories.js';
-import { getMaxActions } from './state.js';
+import { getPlayerTerritories, getTerritory, getAdjacentEnemies } from './territories.js';
 import { getBuildableStructures } from './structures.js';
 import { canAffordCard } from './cards.js';
 import { getTechTreeStatus } from './tech.js';
 import { getDeployCount, getDeployCost } from './troops.js';
 import { getMaxAttackers } from './combat.js';
+
+function getMaxActions(state) {
+    const player = state.players[state.currentPlayer];
+    let max = BASE_ACTIONS_PER_TURN;
+    if (player.techUnlocked.includes('sci_t2')) max = 4;
+    return max;
+}
 
 // ── Left Panel ──────────────────────────────────────────────────────
 export function updateLeftPanel(state) {
@@ -222,7 +228,7 @@ export function showTerritoryPopup(state, territoryId, callbacks) {
 
         // Attack phase: select as source or target
         if (state.phase === 'attack' && isOwned && t.troops > 1) {
-            const enemies = getAdjacentEnemies(state.territories, territoryId, 0);
+            const enemies = getAdjacentEnemies(state.territories, territoryId, 0, state);
             if (enemies.length > 0) {
                 actionsHTML += `<button class="btn btn-attack-select" id="btn-attack-select">
           ⚔️ Attack From Here (${t.troops - 1} available)</button>`;
@@ -232,7 +238,9 @@ export function showTerritoryPopup(state, territoryId, callbacks) {
         // Attack target selection
         if (state.phase === 'attack' && state.attackSource && !isOwned) {
             const source = getTerritory(state.territories, state.attackSource);
-            if (source && source.adjacent.includes(territoryId)) {
+            // Check adjacency (land or sea) using getAdjacentEnemies on source to be consistent
+            const enemies = getAdjacentEnemies(state.territories, state.attackSource, 0, state);
+            if (enemies.find(e => e.id === territoryId)) {
                 const maxAtk = getMaxAttackers(state, state.attackSource);
                 actionsHTML += `<button class="btn btn-attack-target" id="btn-attack-target">
           ⚔️ Attack! (up to ${Math.min(maxAtk, 3)} dice)</button>`;

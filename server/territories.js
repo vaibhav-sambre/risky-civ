@@ -1,20 +1,55 @@
-// ── Risky Civ — Territory Helpers ───────────────────────────────────
+const { BASE_TERRITORY_RESOURCES } = require('./config');
+const { generateMap } = require('./mapgen');
+// ── Risky Civ — Territory Management ────────────────────────────────
+
+// Store the generated map data (set once per game init)
+let _continentData = {};
+let _seaRoutes = [];
+
+/**
+ * Create territories using a procedurally generated island-continent map.
+ * Each call produces a unique random map layout with sea-separated continents.
+ */
+function createTerritories() {
+    const { territories: mapTerritories, continents, seaRoutes } = generateMap();
+    _continentData = continents;
+    _seaRoutes = seaRoutes;
+
+    return mapTerritories.map(t => ({
+        ...t,
+        owner: null,
+        troops: 0,
+        structures: [],
+        baseResources: { ...BASE_TERRITORY_RESOURCES },
+    }));
+}
+
+/** Get the continent metadata generated alongside this map */
+function getContinentData() {
+    return _continentData;
+}
+
+/** Get the sea routes for rendering */
+function getSeaRoutes() {
+    return _seaRoutes;
+}
 
 /** Look up a territory by id */
-export function getTerritory(territories, id) {
+function getTerritory(territories, id) {
     return territories.find(t => t.id === id);
 }
 
 /** Get all territories owned by a player */
-export function getPlayerTerritories(territories, playerId) {
+function getPlayerTerritories(territories, playerId) {
     return territories.filter(t => t.owner === playerId);
 }
 
 /**
  * Get adjacent territories that belong to an enemy (or are neutral).
- * Respects inter-continental combat tech restriction if state provided.
+ * If state is provided, respects inter-continental combat tech restriction.
+ * Sea-adjacent enemies are only included if the player has 'intercontinentalCombat'.
  */
-export function getAdjacentEnemies(territories, territoryId, playerId, state = null) {
+function getAdjacentEnemies(territories, territoryId, playerId, state = null) {
     const t = getTerritory(territories, territoryId);
     if (!t) return [];
 
@@ -40,14 +75,14 @@ export function getAdjacentEnemies(territories, territoryId, playerId, state = n
 }
 
 /** Check if a player can attack from a given territory */
-export function canAttackFrom(territories, territoryId, playerId, state = null) {
+function canAttackFrom(territories, territoryId, playerId, state = null) {
     const t = getTerritory(territories, territoryId);
     if (t.owner !== playerId || t.troops <= 1) return false;
     return getAdjacentEnemies(territories, territoryId, playerId, state).length > 0;
 }
 
 /** Get all continents and whether a player controls them fully */
-export function getControlledContinents(territories, playerId) {
+function getControlledContinents(territories, playerId) {
     const continents = {};
     for (const t of territories) {
         if (!continents[t.continent]) continents[t.continent] = { total: 0, owned: 0 };
@@ -62,6 +97,8 @@ export function getControlledContinents(territories, playerId) {
 }
 
 /** Get unclaimed (neutral) territories */
-export function getNeutralTerritories(territories) {
+function getNeutralTerritories(territories) {
     return territories.filter(t => t.owner === null);
 }
+
+module.exports = { createTerritories, getContinentData, getSeaRoutes, getTerritory, getPlayerTerritories, getAdjacentEnemies, canAttackFrom, getControlledContinents, getNeutralTerritories };

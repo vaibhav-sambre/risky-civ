@@ -1,13 +1,10 @@
+const { STRUCTURES, TROOP_UPKEEP_COST } = require('./config');
+const { getPlayerTerritories, getControlledContinents } = require('./territories');
+const { addLog, hasEffect } = require('./state');
 // ── Risky Civ — Resource Collection ─────────────────────────────────
 
-import {
-    STRUCTURES, TROOP_UPKEEP_COST
-} from './config.js';
-import { getPlayerTerritories, getControlledContinents } from './territories.js';
-import { addLog, hasEffect } from './state.js';
-
 /** Collect resources for a player from all owned territories */
-export function collectResources(state, playerId) {
+function collectResources(state, playerId) {
     const player = state.players[playerId];
     const owned = getPlayerTerritories(state.territories, playerId);
 
@@ -86,7 +83,7 @@ export function collectResources(state, playerId) {
 }
 
 /** Deduct troop upkeep; desertion if negative money */
-export function payUpkeep(state, playerId) {
+function payUpkeep(state, playerId) {
     const player = state.players[playerId];
     const owned = getPlayerTerritories(state.territories, playerId);
     const totalTroops = owned.reduce((sum, t) => sum + t.troops, 0);
@@ -111,3 +108,5 @@ export function payUpkeep(state, playerId) {
         player.resources.money = Math.max(0, player.resources.money);
     }
 }
+
+module.exports = { collectResources, payUpkeep };

@@ -1,9 +1,9 @@
-// ── Risky Civ — Tech Tree Helpers ───────────────────────────────────
-
-import { TECH_TREE } from './config.js';
+const { TECH_TREE } = require('./config');
+const { addLog } = require('./state');
+// ── Risky Civ — Tech Tree ───────────────────────────────────────────
 
 /** Get the next unlockable tech in a branch for a player */
-export function getNextTech(state, playerId, branch) {
+function getNextTech(state, playerId, branch) {
     const player = state.players[playerId];
     const techs = TECH_TREE[branch];
     for (const tech of techs) {
@@ -13,7 +13,7 @@ export function getNextTech(state, playerId, branch) {
 }
 
 /** Check if a player can afford the next tech in a branch */
-export function canAffordTech(state, playerId, techId) {
+function canAffordTech(state, playerId, techId) {
     const player = state.players[playerId];
     for (const branch of Object.values(TECH_TREE)) {
         const tech = branch.find(t => t.id === techId);
@@ -30,8 +30,32 @@ export function canAffordTech(state, playerId, techId) {
     return false;
 }
 
+/** Unlock a technology */
+function unlockTech(state, playerId, techId) {
+    const player = state.players[playerId];
+    if (!canAffordTech(state, playerId, techId)) return false;
+
+    for (const branch of Object.values(TECH_TREE)) {
+        const tech = branch.find(t => t.id === techId);
+        if (tech) {
+            player.resources.research -= tech.cost;
+            player.techUnlocked.push(tech.id);
+            addLog(state, `${player.name} unlocked ${tech.name}!`);
+
+            // Check for world domination win
+            if (tech.effect === 'worldDomination') {
+                state.gameOver = true;
+                state.winner = playerId;
+                addLog(state, `${player.name} achieved World Domination!`);
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
 /** Get the full tech tree status for a player */
-export function getTechTreeStatus(state, playerId) {
+function getTechTreeStatus(state, playerId) {
     const player = state.players[playerId];
     const status = {};
     for (const [branch, techs] of Object.entries(TECH_TREE)) {
@@ -43,3 +67,5 @@ export function getTechTreeStatus(state, playerId) {
     }
     return status;
 }
+
+module.exports = { getNextTech, canAffordTech, unlockTech, getTechTreeStatus };

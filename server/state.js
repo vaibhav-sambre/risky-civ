@@ -1,13 +1,10 @@
+const { STARTING_RESOURCES, BASE_ACTIONS_PER_TURN, STARTING_HAND_SIZE, BONUS_CARDS, EVENT_CARDS, PLAYER_NAMES, PLAYER_COLORS } = require('./config');
+const { createTerritories, getContinentData, getSeaRoutes } = require('./territories');
+const { shuffle, deepClone } = require('./utils');
+
 // ── Risky Civ — Game State Management ───────────────────────────────
 
-import {
-    STARTING_RESOURCES, BASE_ACTIONS_PER_TURN,
-    STARTING_HAND_SIZE, BONUS_CARDS, EVENT_CARDS, PLAYER_NAMES, PLAYER_COLORS
-} from './config.js';
-import { createTerritories, getContinentData } from './territories.js';
-import { shuffle, deepClone } from './utils.js';
-
-export function createGameState() {
+function createGameState() {
     // Build bonus deck (two copies for variety) — these go into player hands
     const bonusDeck = shuffle([...BONUS_CARDS.map(c => ({ ...c })), ...BONUS_CARDS.map(c => ({ ...c }))]);
 
@@ -45,6 +42,7 @@ export function createGameState() {
     return {
         turn: 1,
         continentData,
+        seaRoutes: getSeaRoutes(),
         currentPlayer: 0,
         phase: 'action',         // 'action' | 'attack' | 'ai'
         actionsRemaining: BASE_ACTIONS_PER_TURN,
@@ -71,26 +69,28 @@ export function createGameState() {
     };
 }
 
-export function addLog(state, message) {
+function addLog(state, message) {
     state.log.push({ turn: state.turn, message });
     if (state.log.length > 100) state.log.shift();
 }
 
-export function getMaxActions(state) {
+function getMaxActions(state) {
     const player = state.players[state.currentPlayer];
     let max = BASE_ACTIONS_PER_TURN;
     if (player.techUnlocked.includes('sci_t2')) max = 4;
     return max;
 }
 
-export function hasEffect(state, playerId, effectName) {
+function hasEffect(state, playerId, effectName) {
     return state.players[playerId].tempEffects[effectName] === true;
 }
 
-export function setEffect(state, playerId, effectName, value = true) {
+function setEffect(state, playerId, effectName, value = true) {
     state.players[playerId].tempEffects[effectName] = value;
 }
 
-export function clearEffects(state, playerId) {
+function clearEffects(state, playerId) {
     state.players[playerId].tempEffects = {};
 }
+
+module.exports = { createGameState, addLog, getMaxActions, hasEffect, setEffect, clearEffects };

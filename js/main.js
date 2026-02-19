@@ -1,26 +1,25 @@
 // ── Risky Civ — Main Entry Point ────────────────────────────────────
 
-import { createGameState, addLog, clearEffects, getMaxActions } from './state.js';
+import { API_URL } from './config.js';
 import { renderMap, updateMap, highlightTerritories, clearHighlights } from './map.js';
-import { collectResources, payUpkeep } from './resources.js';
-import { deployTroops } from './troops.js';
-import { buildStructure } from './structures.js';
-import { spendAction, hasActions, resetActions, startAttackPhase } from './actions.js';
-import { resolveCombatRound, applyCombatResult, canAttack, getMaxAttackers } from './combat.js';
-import { drawCards, playCard, mustPlayCard } from './cards.js';
-import { unlockTech } from './tech.js';
-import { aiTurn } from './ai.js';
-import { getPlayerTerritories, getAdjacentEnemies, canAttackFrom } from './territories.js';
-import { WIN_TERRITORY_PERCENT, TOTAL_TERRITORIES } from './config.js';
 import {
     updateLeftPanel, updateCardHand, updateTechTree,
     showTerritoryPopup, hideTerritoryPopup,
     showCombatDialog, showGameOver, updateLog
 } from './ui.js';
+import { getAdjacentEnemies, canAttackFrom } from './territories.js';
+import { canAttack, getMaxAttackers } from './combat.js';
 
-let state;
+let state = null;
+let gameId = null;
 
-/**  Show a full-width event banner when a global event fires  */
+// Local UI state (not synced to server)
+let uiState = {
+    selectedTerritory: null,
+    attackSource: null
+};
+
+// ── Event Banner ────────────────────────────────────────────────────
 function showEventNotification(event) {
     if (!event) return;
     let banner = document.getElementById('event-banner');
@@ -30,7 +29,7 @@ function showEventNotification(event) {
         document.body.appendChild(banner);
     }
     banner.innerHTML = `
-        <div class="event-banner-content">
+    <div class="event-banner-content">
             <span class="event-banner-icon">${event.icon}</span>
             <div class="event-banner-text">
                 <strong>⚡ GLOBAL EVENT: ${event.name}</strong>
@@ -42,33 +41,76 @@ function showEventNotification(event) {
     setTimeout(() => banner.classList.remove('show'), 4000);
 }
 
-/** Initialize the game */
-function init() {
-    state = createGameState();
-    addLog(state, '🎮 Game started! Conquer territories and build your empire.');
-    addLog(state, 'Spend your 3 actions: deploy troops, build structures, or play cards.');
-    addLog(state, 'Then attack enemy territories in the attack phase.');
+// ── API Helpers ─────────────────────────────────────────────────────
 
-    // Initial resource collection
-    collectResources(state, 0);
-    collectResources(state, 1);
+async function apiCall(endpoint, method = 'POST', body = {}) {
+    try {
+        const headers = { 'Content-Type': 'application/json' };
+        // If we have a gameId, we might need it, but endpoints are like /api/game/:id/...
+        // We construct full URL outside or here. 
+        // Let's assume endpoint passed is relative to API_URL
+        const url = `${API_URL}${endpoint}`;
+
+        console.log(`API ${method} ${url}`, body);
+
+        const res = await fetch(url, {
+            method,
+            headers,
+            body: method === 'POST' ? JSON.stringify(body) : undefined
+        });
+
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || 'API Request Failed');
+        }
+
+        return await res.json();
+    } catch (err) {
+        console.error("API Error:", err);
+        alert(`Error: ${err.message}`);
+        return null;
+    }
+}
+
+async function updateGameState(newState) {
+    if (!newState) return;
+
+    // Check for new events to show notification
+    if (newState.lastEvent && (!state || state.lastEvent?.id !== newState.lastEvent.id)) {
+        showEventNotification(newState.lastEvent);
+    }
+
+    state = newState;
+
+    // Merge local UI logic
+    state.selectedTerritory = uiState.selectedTerritory;
+    state.attackSource = uiState.attackSource;
 
     renderAll();
-    wireEvents();
+    checkGameEnd();
 }
 
-/** Full render of all UI components */
+// ── Initialization ──────────────────────────────────────────────────
+
+async function init() {
+    console.log(`Connecting to Game Server at ${API_URL}...`);
+
+    const data = await apiCall('/api/game/new', 'POST');
+    if (data) {
+        gameId = data.gameId;
+        console.log("Game Created, ID:", gameId);
+        await updateGameState(data.state);
+        wireEvents();
+    } else {
+        document.body.innerHTML = '<h1>Error connecting to game server. Please ensure server is running.</h1>';
+    }
+}
+
+// ── Rendering ───────────────────────────────────────────────────────
+
 function renderAll() {
-    renderMap(document.getElementById('map-container'), state.territories, onTerritoryClick);
-    updateLeftPanel(state);
-    updateCardHand(state, onPlayCard);
-    updateTechTree(state, onUnlockTech);
-    updateLog(state);
-}
-
-/** Lighter update (no full map re-render) */
-function updateAll() {
-    updateMap(state.territories);
+    if (!state) return;
+    renderMap(document.getElementById('map-container'), state, onTerritoryClick);
     updateLeftPanel(state);
     updateCardHand(state, onPlayCard);
     updateTechTree(state, onUnlockTech);
@@ -78,66 +120,87 @@ function updateAll() {
 // ── Event Handlers ──────────────────────────────────────────────────
 
 function wireEvents() {
-    document.getElementById('end-turn-btn').addEventListener('click', onEndTurnBtn);
+    const endBtn = document.getElementById('end-turn-btn');
+    // Remove old listeners to prevent duplicates if any
+    const newBtn = endBtn.cloneNode(true);
+    endBtn.parentNode.replaceChild(newBtn, endBtn);
+    newBtn.addEventListener('click', onEndTurnBtn);
 }
 
 function onEndTurnBtn() {
-    if (state.gameOver) return;
-    if (state.currentPlayer !== 0) return;
+    if (!state || state.gameOver) return;
 
     if (state.phase === 'action') {
-        // Transition to attack phase
-        startAttackPhase(state);
-        state.attackSource = null;
+        // Just switching UI phase to attack?
+        // Wait, server manages phase.
+        // If I click "Start Attack Phase", I call 'end-phase' endpoint on server?
+        // Server's 'endPhase' logic: Action -> Attack -> AI.
+        // Yes.
+        apiCall(`/api/game/${gameId}/end-phase`, 'POST').then(data => {
+            if (data) updateGameState(data.state);
+        });
+
+        // Clear local selection
+        uiState.attackSource = null;
+        uiState.selectedTerritory = null;
         clearHighlights();
         hideTerritoryPopup();
-        renderAll();
-        addLog(state, 'Click your territory to select attack source, then click enemy to attack.');
-        updateLog(state);
+
     } else if (state.phase === 'attack') {
-        // End player turn, start AI turn  
-        endPlayerTurn();
+        // End attack phase -> AI Turn
+        // Calls end-phase again
+        apiCall(`/api/game/${gameId}/end-phase`, 'POST').then(data => {
+            if (data) updateGameState(data.state);
+        });
     }
 }
 
 function onTerritoryClick(territoryId) {
-    if (state.gameOver) return;
-    if (state.currentPlayer !== 0) return;
+    if (!state || state.gameOver || state.currentPlayer !== 0) return;
 
-    state.selectedTerritory = territoryId;
+    uiState.selectedTerritory = territoryId;
+    state.selectedTerritory = territoryId; // sync for UI rendering immediately if helpful
 
-    // In attack phase, handle attack source/target selection
+    // Attack Phase Logic
     if (state.phase === 'attack') {
         const t = state.territories.find(t => t.id === territoryId);
 
-        if (!state.attackSource) {
-            // Selecting attack source
+        if (!uiState.attackSource) {
+            // Select Source
             if (t.owner === 0 && t.troops > 1) {
                 const enemies = getAdjacentEnemies(state.territories, territoryId, 0, state);
                 if (enemies.length > 0) {
+                    uiState.attackSource = territoryId;
                     state.attackSource = territoryId;
                     highlightTerritories(enemies.map(e => e.id), 'attack-target');
                 }
             }
-        } else if (state.attackSource === territoryId) {
+        } else if (uiState.attackSource === territoryId) {
             // Deselect
+            uiState.attackSource = null;
             state.attackSource = null;
             clearHighlights();
             hideTerritoryPopup();
+            renderAll(); // re-render to clear highlights
             return;
         } else if (t.owner !== 0) {
-            // Attacking!
-            if (canAttack(state, state.attackSource, territoryId)) {
-                executeAttack(state.attackSource, territoryId);
+            // Attack Target?
+            if (canAttack(state, uiState.attackSource, territoryId)) {
+                executeAttack(uiState.attackSource, territoryId);
                 return;
+            } else {
+                // Invalid target, select it normally
+                // uiState.attackSource = null; 
+                // clearHighlights();
             }
         } else {
-            // Clicked own territory — switch source
-            state.attackSource = null;
+            // Clicked another own territory -> switch source
+            uiState.attackSource = null;
             clearHighlights();
             if (t.troops > 1) {
                 const enemies = getAdjacentEnemies(state.territories, territoryId, 0, state);
                 if (enemies.length > 0) {
+                    uiState.attackSource = territoryId;
                     state.attackSource = territoryId;
                     highlightTerritories(enemies.map(e => e.id), 'attack-target');
                 }
@@ -145,10 +208,12 @@ function onTerritoryClick(territoryId) {
         }
     }
 
+    // Show Popup
     showTerritoryPopup(state, territoryId, {
         onDeploy: onDeploy,
         onBuild: onBuild,
         onAttackSelect: (id) => {
+            uiState.attackSource = id;
             state.attackSource = id;
             const enemies = getAdjacentEnemies(state.territories, id, 0, state);
             highlightTerritories(enemies.map(e => e.id), 'attack-target');
@@ -156,173 +221,77 @@ function onTerritoryClick(territoryId) {
             renderAll();
         },
         onAttackTarget: (id) => {
-            if (state.attackSource) {
-                executeAttack(state.attackSource, id);
+            if (uiState.attackSource) {
+                executeAttack(uiState.attackSource, id);
             }
         },
         onClose: () => {
+            uiState.selectedTerritory = null;
             state.selectedTerritory = null;
             if (state.phase !== 'attack') clearHighlights();
+            renderAll();
         }
     });
+
+    renderAll(); // update map highlights etc
 }
 
-function onDeploy(territoryId, count) {
-    if (!hasActions(state)) return;
-    if (state.phase !== 'action') return;
-
-    spendAction(state);
-    deployTroops(state, territoryId, count);
-    hideTerritoryPopup();
-    renderAll();
-    checkGameEnd();
-}
-
-function onBuild(territoryId, structureType) {
-    if (!hasActions(state)) return;
-    if (state.phase !== 'action') return;
-
-    spendAction(state);
-    const success = buildStructure(state, territoryId, structureType);
-    if (!success) {
-        // Refund action
-        state.actionsRemaining++;
+async function onDeploy(territoryId, count) {
+    const data = await apiCall(`/api/game/${gameId}/deploy`, 'POST', { territoryId, count });
+    if (data) {
+        updateGameState(data.state);
+        hideTerritoryPopup();
     }
-    hideTerritoryPopup();
-    renderAll();
 }
 
-function onPlayCard(cardIndex) {
-    if (!hasActions(state)) return;
-    if (state.phase !== 'action') return;
-
-    spendAction(state);
-    const success = playCard(state, 0, cardIndex);
-    if (!success) {
-        // Refund the action (card too expensive)
-        state.actionsRemaining++;
+async function onBuild(territoryId, structureType) {
+    const data = await apiCall(`/api/game/${gameId}/build`, 'POST', { territoryId, structureType });
+    if (data) {
+        updateGameState(data.state);
+        hideTerritoryPopup();
     }
-    renderAll();
-    checkGameEnd();
 }
 
-function onUnlockTech(techId) {
-    if (!hasActions(state)) return;
-    if (state.phase !== 'action') return;
-
-    spendAction(state);
-    const success = unlockTech(state, 0, techId);
-    if (!success) {
-        state.actionsRemaining++;
+async function onPlayCard(cardIndex) {
+    const data = await apiCall(`/api/game/${gameId}/play-card`, 'POST', { cardIndex });
+    if (data) {
+        updateGameState(data.state);
     }
-    renderAll();
-    checkGameEnd();
 }
 
-function executeAttack(sourceId, targetId) {
-    const maxAtk = getMaxAttackers(state, sourceId);
-    const attackCount = Math.min(maxAtk, 3);
-
-    const result = resolveCombatRound(state, sourceId, targetId, attackCount);
-    const outcome = applyCombatResult(state, sourceId, targetId, result, attackCount);
-
-    state.attackSource = null;
-    clearHighlights();
-    hideTerritoryPopup();
-
-    showCombatDialog(result, outcome.captured, () => {
-        renderAll();
-        checkGameEnd();
-    });
+async function onUnlockTech(techId) {
+    const data = await apiCall(`/api/game/${gameId}/unlock-tech`, 'POST', { techId });
+    if (data) {
+        updateGameState(data.state);
+    }
 }
 
-// ── Turn Management ─────────────────────────────────────────────────
+async function executeAttack(sourceId, targetId) {
+    const data = await apiCall(`/api/game/${gameId}/attack`, 'POST', { sourceId, targetId });
+    if (data) {
+        // Server returns result in `data.result` and captured bool in `data.captured`
+        // But wait, my endpoint `attack` returns { state, result, captured }
 
-async function endPlayerTurn() {
-    // Clear temporary effects
-    clearEffects(state, 0);
-    state.freeBuild = false;
-    state.halfCostDeploy = false;
-    state.attackSource = null;
-    state.selectedTerritory = null;
-    clearHighlights();
-    hideTerritoryPopup();
+        uiState.attackSource = null;
+        state.attackSource = null;
+        clearHighlights();
+        hideTerritoryPopup();
 
-    // ── AI Turn ──
-    state.currentPlayer = 1;
-    state.phase = 'ai';
-    resetActions(state);
-    addLog(state, '── AI Turn ──');
+        updateGameState(data.state);
 
-    // AI: draw cards (may trigger global event)
-    const aiEvent = drawCards(state, 1);
-    collectResources(state, 1);
-    payUpkeep(state, 1);
-
-    if (aiEvent) showEventNotification(aiEvent);
-    renderAll();
-
-    await aiTurn(state, () => renderAll());
-
-    clearEffects(state, 1);
-
-    if (checkGameEnd()) return;
-
-    // ── Next Player Turn ──
-    state.turn++;
-    state.currentPlayer = 0;
-    state.phase = 'action';
-    resetActions(state);
-
-    // Player: draw cards (may trigger global event)
-    const playerEvent = drawCards(state, 0);
-    collectResources(state, 0);
-    payUpkeep(state, 0);
-
-    addLog(state, `── Turn ${state.turn} ──`);
-    if (playerEvent) showEventNotification(playerEvent);
-    renderAll();
+        if (data.result) {
+            showCombatDialog(data.result, data.captured, () => {
+                // remove dialog
+            });
+        }
+    }
 }
-
-// ── Win/Loss Detection ──────────────────────────────────────────────
 
 function checkGameEnd() {
     if (state.gameOver) {
         const won = state.winner === 0;
         showGameOver(won, won ? 'You achieved World Domination!' : 'The AI achieved World Domination!');
-        return true;
     }
-
-    const playerCount = getPlayerTerritories(state.territories, 0).length;
-    const aiCount = getPlayerTerritories(state.territories, 1).length;
-    const winThreshold = Math.ceil(TOTAL_TERRITORIES * WIN_TERRITORY_PERCENT);
-
-    if (playerCount >= winThreshold) {
-        state.gameOver = true;
-        state.winner = 0;
-        showGameOver(true, `You control ${playerCount} of ${TOTAL_TERRITORIES} territories!`);
-        return true;
-    }
-    if (aiCount >= winThreshold) {
-        state.gameOver = true;
-        state.winner = 1;
-        showGameOver(false, `AI controls ${aiCount} of ${TOTAL_TERRITORIES} territories.`);
-        return true;
-    }
-    if (playerCount === 0) {
-        state.gameOver = true;
-        state.winner = 1;
-        showGameOver(false, 'You lost all your territories!');
-        return true;
-    }
-    if (aiCount === 0) {
-        state.gameOver = true;
-        state.winner = 0;
-        showGameOver(true, 'You eliminated the AI!');
-        return true;
-    }
-
-    return false;
 }
 
 // ── Start ───────────────────────────────────────────────────────────

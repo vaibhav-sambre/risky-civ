@@ -1,3 +1,4 @@
+const { shuffle, randomPick, randomInt } = require('./utils');
 // ── Risky Civ — Procedural Map Generator (Grid + K-Means) ───────────
 // Generates map using Cellular Automata for continents and K-Means
 // for territory subdivision. Outputs pixel-perfect boundaries.
@@ -22,7 +23,7 @@ const CONTINENT_NAMES_POOL = [
     'Frostheim', 'Galadria', 'Havencross', 'Ironveil', 'Kaldheim',
 ];
 
-export function generateMap(
+function generateMap(
     width = 1010,
     height = 590,
     numTerritories = 30,
@@ -467,3 +468,5 @@ function createSeaRoutes(territories, centers, numContinents) {
     }
     return seaRoutes;
 }
+
+module.exports = { generateMap, growContinents, getNeighbors, runKMeans, traceContours, computeAdjacencyFromGrid, getPolygonCentroid, distributeTerritories, pickRandom, computeContinentBonus, createSeaRoutes };

@@ -1,17 +1,16 @@
+const { getPlayerTerritories, getAdjacentEnemies, getTerritory, getNeutralTerritories, canAttackFrom } = require('./territories');
+const { deployTroops } = require('./troops');
+const { buildStructure, canAffordStructure } = require('./structures');
+const { playCard } = require('./cards');
+const { unlockTech, getNextTech } = require('./tech');
+const { resolveCombatRound, applyCombatResult, canAttack, getMaxAttackers } = require('./combat');
+const { spendAction, hasActions } = require('./actions');
+const { addLog } = require('./state');
+const { randomPick } = require('./utils');
 // ── Risky Civ — AI Opponent ──────────────────────────────────────────
 
-import { getPlayerTerritories, getAdjacentEnemies, getTerritory, getNeutralTerritories, canAttackFrom } from './territories.js';
-import { deployTroops } from './troops.js';
-import { buildStructure, canAffordStructure } from './structures.js';
-import { playCard } from './cards.js';
-import { unlockTech, getNextTech } from './tech.js';
-import { resolveCombatRound, applyCombatResult, canAttack, getMaxAttackers } from './combat.js';
-import { spendAction, hasActions } from './actions.js';
-import { addLog } from './state.js';
-import { randomPick } from './utils.js';
-
 /** Execute the AI's full turn (actions + attacks) */
-export async function aiTurn(state, renderCallback, playerId = 1) {
+async function aiTurn(state, renderCallback, playerId = 1) {
     const aiId = playerId;
     const player = state.players[aiId];
 
@@ -186,3 +185,5 @@ async function aiAttack(state, aiId, renderCallback) {
         }
     }
 }
+
+module.exports = { aiTurn, chooseAction, canAffordAnyStructure, tryBuildOrCard, chooseBuildTarget, aiSpendTech, aiAttack };
