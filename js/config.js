@@ -71,7 +71,7 @@ export const STRUCTURES = {
 
 export const TROOP_DEPLOY_COST = 3;
 
-export const TROOP_UPKEEP_COST = 1;
+export const TROOP_UPKEEP_COST = 0.5;
 
 export const BASE_DEPLOY_COUNT = 3;
 

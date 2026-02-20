@@ -14,7 +14,7 @@ const STRUCTURES = {
     bank: { name: 'Bank', icon: '🏦', cost: { production: 3, money: 4 }, bonus: { money: 2 } },
 };
 const TROOP_DEPLOY_COST = 3;
-const TROOP_UPKEEP_COST = 1;
+const TROOP_UPKEEP_COST = 0.5;
 const BASE_DEPLOY_COUNT = 3;
 const MIN_GARRISON = 1;
 const BASE_ACTIONS_PER_TURN = 3;
