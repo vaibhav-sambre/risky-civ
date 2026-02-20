@@ -7,7 +7,7 @@ export const NEUTRAL_COLOR = '#8B8B8B';
 // ── Backend Configuration ──────────────────────────────────────────
 export const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
   ? 'http://localhost:3000'
-  : 'https://risky-civ-server.onrender.com'; // User must update this if differet
+  : 'https://risky-civ.onrender.com'; // User must update this if differet
 
 // ── Resources ───────────────────────────────────────────────────────
 export const RESOURCE_TYPES = ['production', 'research', 'money'];
