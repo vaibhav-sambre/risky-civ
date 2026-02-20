@@ -56,7 +56,7 @@ function build(state, territoryId, structureType) {
 }
 
 // ── Play a card ─────────────────────────────────────────────────────
-function playCardAction(state, cardIndex) {
+function playCardAction(state, cardIndex, targetId) {
     if (state.currentPlayer !== 0 || state.phase !== 'action') {
         return { error: 'Cannot play cards now' };
     }
@@ -64,8 +64,9 @@ function playCardAction(state, cardIndex) {
         return { error: 'No actions remaining' };
     }
     spendAction(state);
-    const success = playCard(state, 0, cardIndex);
+    const success = playCard(state, 0, cardIndex, targetId);
     if (!success) {
+        state.actionsRemaining++; // refund action if failed to afford
         return { error: 'Failed to play card' };
     }
     return { state };
@@ -116,6 +117,8 @@ async function endPhase(state) {
         // Player's attack phase ends → AI turn
         state.currentPlayer = 1;
         state.phase = 'ai';
+        state.players[0].tempEffects['capturedThisTurn'] = 0;
+        state.players[1].tempEffects['capturedThisTurn'] = 0;
         state.attackSource = null;
         state.selectedTerritory = null;
 
@@ -133,6 +136,8 @@ async function endPhase(state) {
         state.turn++;
         state.currentPlayer = 0;
         state.phase = 'action';
+        state.players[0].tempEffects['capturedThisTurn'] = 0;
+        state.players[1].tempEffects['capturedThisTurn'] = 0;
         clearEffects(state, 0);
         state.freeBuild = false;
         state.halfCostDeploy = false;

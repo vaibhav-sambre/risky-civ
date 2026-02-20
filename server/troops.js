@@ -7,7 +7,7 @@ const { addLog, hasEffect } = require('./state');
 function getDeployCost(state, playerId) {
     const player = state.players[playerId];
     let cost = TROOP_DEPLOY_COST;
-    if (player.techUnlocked.includes('mil_t4')) cost = Math.ceil(cost / 2); // Elite Troops
+    if (player.techUnlocked.includes('mil_t4') && !state.players[playerId].tempEffects['cyberattack']) cost = Math.ceil(cost / 2); // Elite Troops
     if (hasEffect(state, playerId, 'halfCostDeploy') || state.halfCostDeploy) cost = Math.ceil(cost / 2);
     return cost;
 }
@@ -18,7 +18,7 @@ function getDeployCount(state, playerId, territoryId) {
     let count = BASE_DEPLOY_COUNT;
 
     // Double Deploy tech
-    if (player.techUnlocked.includes('mil_t3')) count *= 2;
+    if (player.techUnlocked.includes('mil_t3') && !state.players[playerId].tempEffects['cyberattack']) count *= 2;
 
     return count;
 }

@@ -62,7 +62,7 @@ function getAdjacentEnemies(territories, territoryId, playerId, state = null) {
     let seaEnemies = [];
     if (t.seaAdjacent && t.seaAdjacent.length > 0) {
         const hasNavalTech = state
-            ? state.players[playerId].techUnlocked.includes('mil_t5')
+            ? (state.players[playerId].techUnlocked.includes('mil_t5') && !state.players[playerId].tempEffects['cyberattack'])
             : false;
         if (hasNavalTech) {
             seaEnemies = t.seaAdjacent

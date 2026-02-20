@@ -16,7 +16,7 @@ function collectResources(state, playerId) {
         let mon = t.baseResources.money;
 
         // Tech: betterBase (+1 each)
-        if (player.techUnlocked.includes('eco_t2')) {
+        if ((player.techUnlocked.includes('eco_t2') && !hasEffect(state, playerId, 'cyberattack'))) {
             prod += 1; res += 1; mon += 1;
         }
 
@@ -26,10 +26,10 @@ function collectResources(state, playerId) {
             if (!def || !def.bonus) continue;
             let bonusMult = 1;
             // Tech: betterStructures (+1 extra)
-            if (player.techUnlocked.includes('eco_t1')) bonusMult = 1;
-            if (def.bonus.production) prod += def.bonus.production + (player.techUnlocked.includes('eco_t1') ? 1 : 0);
-            if (def.bonus.research) res += def.bonus.research + (player.techUnlocked.includes('eco_t1') ? 1 : 0);
-            if (def.bonus.money) mon += def.bonus.money + (player.techUnlocked.includes('eco_t1') ? 1 : 0);
+            if ((player.techUnlocked.includes('eco_t1') && !hasEffect(state, playerId, 'cyberattack'))) bonusMult = 1;
+            if (def.bonus.production) prod += def.bonus.production + ((player.techUnlocked.includes('eco_t1') && !hasEffect(state, playerId, 'cyberattack')) ? 1 : 0);
+            if (def.bonus.research) res += def.bonus.research + ((player.techUnlocked.includes('eco_t1') && !hasEffect(state, playerId, 'cyberattack')) ? 1 : 0);
+            if (def.bonus.money) mon += def.bonus.money + ((player.techUnlocked.includes('eco_t1') && !hasEffect(state, playerId, 'cyberattack')) ? 1 : 0);
         }
 
         // Card effects: double factory / university / bank output
@@ -43,12 +43,13 @@ function collectResources(state, playerId) {
         }
         if (hasEffect(state, playerId, 'doubleBank')) {
             const bankCount = t.structures.filter(s => s === 'bank').length;
-            mon += bankCount * STRUCTURES.bank.bonus.money;
+            const bankBase = player.techUnlocked.includes('eco_t5') && !hasEffect(state, playerId, 'cyberattack') ? 4 : STRUCTURES.bank.bonus.money;
+        mon += bankCount * bankBase;
         }
 
         // Embargo: banks produce nothing
         if (hasEffect(state, playerId, 'embargo')) {
-            const bankBonus = t.structures.filter(s => s === 'bank').length * (STRUCTURES.bank.bonus.money + (player.techUnlocked.includes('eco_t1') ? 1 : 0));
+            const bankBonus = t.structures.filter(s => s === 'bank').length * (STRUCTURES.bank.bonus.money + ((player.techUnlocked.includes('eco_t1') && !hasEffect(state, playerId, 'cyberattack')) ? 1 : 0));
             mon -= bankBonus;
         }
 
@@ -68,7 +69,7 @@ function collectResources(state, playerId) {
         const bonus = state.continentData?.[c]?.bonus;
         if (bonus) {
             let mult = 1;
-            if (player.techUnlocked.includes('eco_t4')) mult = 2; // Trade Routes
+            if ((player.techUnlocked.includes('eco_t4') && !hasEffect(state, playerId, 'cyberattack'))) mult = 2; // Trade Routes
             prodTotal += bonus.production * mult;
             resTotal += bonus.research * mult;
             monTotal += bonus.money * mult;
@@ -76,10 +77,22 @@ function collectResources(state, playerId) {
     }
 
     player.resources.production = prodTotal; // Does not roll over
+    if (player.techUnlocked.includes('sci_t6') && !hasEffect(state, playerId, 'cyberattack')) resTotal *= 2;
     player.resources.research += resTotal;
     player.resources.money += monTotal;
 
     addLog(state, `${player.name} collected +${prodTotal} ⚙️, +${resTotal} 🔬, +${monTotal} 💰`);
+    if (player.techUnlocked.includes('eco_t7') && !hasEffect(state, playerId, 'cyberattack')) {
+        const enemyId = playerId === 0 ? 1 : 0;
+        // Simple implementation: just 10% of this turn's collection. For a better implementation we'd calculate enemy's base, but this is simple.
+        const espProd = Math.floor(prodTotal * 0.1);
+        const espRes = Math.floor(resTotal * 0.1);
+        const espMon = Math.floor(monTotal * 0.1);
+        state.players[enemyId].resources.production += espProd;
+        state.players[enemyId].resources.research += espRes;
+        state.players[enemyId].resources.money += espMon;
+        if (espProd > 0 || espRes > 0 || espMon > 0) addLog(state, `${state.players[enemyId].name} gained resources from Industrial Espionage!`);
+    }
 }
 
 /** Deduct troop upkeep; desertion if negative money */
@@ -87,7 +100,8 @@ function payUpkeep(state, playerId) {
     const player = state.players[playerId];
     const owned = getPlayerTerritories(state.territories, playerId);
     const totalTroops = owned.reduce((sum, t) => sum + t.troops, 0);
-    const cost = Math.ceil(totalTroops * TROOP_UPKEEP_COST);
+    const upkeepMultiplier = (player.techUnlocked.includes('eco_t6') && !hasEffect(state, playerId, 'cyberattack')) ? 0.5 : TROOP_UPKEEP_COST;
+    const cost = Math.ceil(totalTroops * upkeepMultiplier);
 
     player.resources.money -= cost;
     addLog(state, `${player.name} paid ${cost} 💰 troop upkeep (${totalTroops} troops × ${TROOP_UPKEEP_COST})`);

@@ -13,7 +13,8 @@ function resolveCombatRound(state, attackId, defendId, attackCount) {
 
     // Number of dice
     let maxAtk = MAX_ATTACK_DICE;
-    if (attackPlayer.techUnlocked.includes('sci_t3')) maxAtk = 4; // Advanced Tactics
+    if (attackPlayer.techUnlocked.includes('mil_t8') && !hasEffect(state, attacker.owner, 'cyberattack')) maxAtk = 5;
+    else if (attackPlayer.techUnlocked.includes('sci_t3') && !hasEffect(state, attacker.owner, 'cyberattack')) maxAtk = 4; // Advanced Tactics
     const atkDiceCount = clamp(attackCount, 1, maxAtk);
     const defDiceCount = clamp(defender.troops, 1, MAX_DEFEND_DICE);
 
@@ -22,10 +23,10 @@ function resolveCombatRound(state, attackId, defendId, attackCount) {
     let defDice = rollDice(defDiceCount);
 
     // Tech bonuses
-    if (attackPlayer.techUnlocked.includes('mil_t1') || hasEffect(state, attacker.owner, 'attackBonus')) {
+    if ((attackPlayer.techUnlocked.includes('mil_t1') && !hasEffect(state, attacker.owner, 'cyberattack')) || hasEffect(state, attacker.owner, 'attackBonus')) {
         atkDice[0] = clamp(atkDice[0] + 1, 1, 7); // can exceed 6 with bonus
     }
-    if (defendPlayer.techUnlocked.includes('mil_t2') || hasEffect(state, defender.owner, 'defenseBonus')) {
+    if ((defendPlayer.techUnlocked.includes('mil_t2') && !hasEffect(state, defender.owner, 'cyberattack')) || hasEffect(state, defender.owner, 'defenseBonus')) {
         defDice[0] = clamp(defDice[0] + 1, 1, 7);
     }
 
@@ -98,7 +99,7 @@ function canAttack(state, attackId, defendId) {
 
     // Sea adjacency — requires Naval Supremacy tech
     if (attacker.seaAdjacent && attacker.seaAdjacent.includes(defendId)) {
-        return state.players[state.currentPlayer].techUnlocked.includes('mil_t5');
+        return (state.players[state.currentPlayer].techUnlocked.includes('mil_t5') && !hasEffect(state, state.currentPlayer, 'cyberattack'));
     }
 
     return false;

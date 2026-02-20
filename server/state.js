@@ -77,7 +77,8 @@ function addLog(state, message) {
 function getMaxActions(state) {
     const player = state.players[state.currentPlayer];
     let max = BASE_ACTIONS_PER_TURN;
-    if (player.techUnlocked.includes('sci_t2')) max = 4;
+    if (player.techUnlocked.includes('sci_t2') && !hasEffect(state, state.currentPlayer, 'cyberattack')) max = 4;
+    if (player.techUnlocked.includes('sci_t5') && !hasEffect(state, state.currentPlayer, 'cyberattack')) max = 5;
     return max;
 }
 

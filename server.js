@@ -68,8 +68,8 @@ app.post('/api/game/:id/build', (req, res) => {
 app.post('/api/game/:id/play-card', (req, res) => {
     const state = games.get(req.params.id);
     if (!state) return res.status(404).json({ error: 'Game not found' });
-    const { cardIndex } = req.body;
-    const result = game.playCardAction(state, cardIndex);
+    const { cardIndex, targetId } = req.body;
+    const result = game.playCardAction(state, cardIndex, targetId);
     if (result.error) return res.status(400).json({ error: result.error });
     res.json({ state });
 });

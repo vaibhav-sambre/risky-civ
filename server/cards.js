@@ -12,11 +12,12 @@ function drawCards(state, playerId, count = null) {
     const player = state.players[playerId];
     const drawCount = count || CARDS_DRAWN_PER_TURN;
     // Extra draw from tech
-    const extraDraw = player.techUnlocked.includes('sci_t1') ? 1 : 0;
+    const extraDraw = (player.techUnlocked.includes('sci_t1') && !player.tempEffects['cyberattack'] && !player.tempEffects['skipDraw']) ? 1 : 0;
     const totalDraw = drawCount + (count ? 0 : extraDraw);
 
     let triggeredEvent = null;
 
+    if (player.tempEffects['skipDraw']) { player.tempEffects['skipDraw'] = false; return null; }
     for (let i = 0; i < totalDraw; i++) {
         // Check for random event trigger
         if (!count && state.eventDeck.length > 0 && Math.random() < EVENT_CHANCE) {
@@ -169,6 +170,25 @@ function executeEventEffect(state, card) {
             case 'evt_10': // Embargo — Banks produce nothing this turn
                 setEffect(state, pid, 'embargo');
                 break;
+            case 'evt_11': // Golden Age
+                player.resources.production += 40;
+                player.resources.research += 40;
+                player.resources.money += 40;
+                break;
+            case 'evt_12': // Cyberattack
+                setEffect(state, pid, 'cyberattack');
+                break;
+            case 'evt_13': // Pandemic
+                for (const t of owned) {
+                    if (t.troops > 1) {
+                        const loss = Math.ceil(t.troops * 0.3);
+                        t.troops = Math.max(1, t.troops - loss);
+                    }
+                }
+                break;
+            case 'evt_14': // Economic Crash
+                player.resources.money = 0;
+                break;
         }
     }
 }
@@ -229,6 +249,26 @@ function executeBonusEffect(state, playerId, card, targetTerritoryId) {
             player.resources.production += 5;
             player.resources.research += 5;
             break;
+        case 'prod_ex01': // Supply Chain Optimization
+            setEffect(state, playerId, 'freeStructures');
+            break;
+        case 'prod_ex02': // Deforestation
+            player.resources.production += 30;
+            if (owned.length > 0) {
+                owned[0].baseResources.money = Math.max(0, owned[0].baseResources.money - 1);
+            }
+            break;
+        case 'prod_ex03': // Urban Sprawl
+            const validCities = owned.filter(t => t.structures.length < 3); // arbitrarily max structures if we want, or just pick top 2
+            for (let i = 0; i < 2; i++) {
+                if (validCities.length > 0) {
+                    const t = randomPick(validCities);
+                    const struct = randomPick(['factory', 'university', 'bank']);
+                    t.structures.push(struct);
+                    addLog(state, `Urban Sprawl: ${struct} freely built in ${t.name}`);
+                }
+            }
+            break;
 
         // ── Research Cards ──
         case 'res_01': // Eureka Moment
@@ -276,6 +316,19 @@ function executeBonusEffect(state, playerId, card, targetTerritoryId) {
             player.resources.research += 8;
             player.resources.production += 4;
             break;
+        case 'res_ex01': // Brain Drain
+            const stolenRes = Math.min(20, state.players[enemyId].resources.research);
+            state.players[enemyId].resources.research -= stolenRes;
+            player.resources.research += stolenRes;
+            break;
+        case 'res_ex02': // Reverse Engineering
+            if (state.players[enemyId].techUnlocked.length > player.techUnlocked.length) {
+                player.resources.research += 30;
+            }
+            break;
+        case 'res_ex03': // Space Program
+            player.resources.research += 50;
+            break;
 
         // ── Money Cards ──
         case 'mon_01': // Tax Collection
@@ -320,6 +373,13 @@ function executeBonusEffect(state, playerId, card, targetTerritoryId) {
         case 'mon_12': // Loan Shark
             player.resources.money += 12;
             player.resources.production = Math.max(0, player.resources.production - 5);
+            break;
+        case 'mon_ex01': // Billionaire Benefactor
+            player.resources.money += 40;
+            setEffect(state, playerId, 'skipDraw');
+            break;
+        case 'mon_ex02': // War Profiteering
+            player.resources.money += (player.tempEffects['capturedThisTurn'] || 0) * 10;
             break;
 
         // ── Military Cards ──
@@ -409,6 +469,27 @@ function executeBonusEffect(state, playerId, card, targetTerritoryId) {
             }
             break;
         }
+        case 'mil_ex01': // Blitzkrieg
+            setEffect(state, playerId, 'blitzkrieg'); // Enables free attack in action phase
+            break;
+        case 'mil_ex02': { // Scorched Earth
+            // Auto target enemy territory with most structures
+            const devEnemy = [...enemyOwned].sort((a, b) => b.structures.length - a.structures.length);
+            if (devEnemy.length > 0 && devEnemy[0].structures.length > 0) {
+                const target = devEnemy[0];
+                target.structures = [];
+                addLog(state, `Scorched Earth: destroyed all structures in ${target.name}!`);
+            }
+            break;
+        }
+        case 'mil_ex03': // Draft
+            for (const t of owned) {
+                t.troops += 1;
+            }
+            break;
+        case 'mil_ex04': // Naval Blockade
+            setEffect(state, enemyId, 'navalBlockade');
+            break;
 
         // ── Multi-Resource Cards ──
         case 'multi_01': // Golden Age
