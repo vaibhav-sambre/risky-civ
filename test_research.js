@@ -37,6 +37,9 @@ class EcoSim {
         let totalResP0 = 0;
         let totalResP1 = 0;
 
+        let domP0 = false;
+        let domP1 = false;
+
         // Give both players an AI brain
         let turn = 1;
         while (turn <= 200 && !state.gameOver) {
@@ -53,6 +56,7 @@ class EcoSim {
 
             await aiTurn(state, null, 0);
             if (state.players[0].resources.research === 0) zeroResTurnsP0++;
+            if (state.players[0].techUnlocked.includes('sci_t8')) domP0 = true;
             clearEffects(state, 0);
             this.checkWin(state);
             if (state.gameOver) break;
@@ -68,6 +72,7 @@ class EcoSim {
 
             await aiTurn(state, null, 1);
             if (state.players[1].resources.research === 0) zeroResTurnsP1++;
+            if (state.players[1].techUnlocked.includes('sci_t8')) domP1 = true;
             clearEffects(state, 1);
             this.checkWin(state);
 
@@ -81,7 +86,8 @@ class EcoSim {
             avgResP0: totalResP0 / turn,
             avgResP1: totalResP1 / turn,
             finalResP0: state.players[0].resources.research,
-            finalResP1: state.players[1].resources.research
+            finalResP1: state.players[1].resources.research,
+            domUnlocked: domP0 || domP1
         };
     }
 }
@@ -97,6 +103,7 @@ async function runSims() {
     let totalZeroP0 = 0;
     let totalZeroP1 = 0;
     let gamesWithZeroRes = 0;
+    let gamesWithDomination = 0;
     let totalTurns = 0;
     let globalAvgResP0 = 0;
     let globalAvgResP1 = 0;
@@ -113,6 +120,7 @@ async function runSims() {
         if (res.zeroResTurnsP0 > 0 || res.zeroResTurnsP1 > 0) {
             gamesWithZeroRes++;
         }
+        if (res.domUnlocked) gamesWithDomination++;
     }
 
     log(`=== Research Simulation Results (${N} games) ===`);
@@ -120,6 +128,7 @@ async function runSims() {
     log(`Average Research held per turn (P0): ${(globalAvgResP0 / N).toFixed(1)} 🔬`);
     log(`Average Research held per turn (P1): ${(globalAvgResP1 / N).toFixed(1)} 🔬`);
     log(`Games where a player hit exactly 0 Research: ${gamesWithZeroRes} (${((gamesWithZeroRes / N) * 100).toFixed(1)}%)`);
+    log(`Games where World Domination was unlocked: ${gamesWithDomination} (${((gamesWithDomination / N) * 100).toFixed(1)}%)`);
     log(`Total turns played across all games: ${totalTurns * 2} player turns`);
     log(`Total turns a player had exactly 0 Research: ${totalZeroP0 + totalZeroP1} turns (${(((totalZeroP0 + totalZeroP1) / (totalTurns * 2)) * 100).toFixed(2)}%)`);
 }

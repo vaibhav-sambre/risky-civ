@@ -68,18 +68,18 @@ export const BONUS_CARDS = [
   { id: 'prod_12', name: 'Blueprint Cache', category: 'production', type: 'bonus', cost: 6, description: 'Gain +5 Production and +5 Research.', icon: '📐' },
 
   // ── Research (12) ──
-  { id: 'res_01', name: 'Eureka Moment', category: 'research', type: 'bonus', cost: 10, description: 'Gain +15 Research immediately.', icon: '💡' },
-  { id: 'res_02', name: 'Stolen Blueprints', category: 'research', type: 'bonus', cost: 12, description: 'Steal 10 Research from the enemy.', icon: '📜' },
-  { id: 'res_03', name: 'Think Tank', category: 'research', type: 'bonus', cost: 8, description: 'Universities produce double this turn.', icon: '🧠' },
-  { id: 'res_04', name: 'Academic Exchange', category: 'research', type: 'bonus', cost: 6, description: 'Gain +10 Research immediately.', icon: '📚' },
-  { id: 'res_05', name: 'Innovation Grant', category: 'research', type: 'bonus', cost: 8, description: 'Gain +8 Research and draw a card.', icon: '🏅' },
-  { id: 'res_06', name: 'Laboratory', category: 'research', type: 'bonus', cost: 4, description: 'Gain +6 Research immediately.', icon: '🔬' },
-  { id: 'res_07', name: 'Breakthrough', category: 'research', type: 'bonus', cost: 10, description: 'Gain +18 Research immediately.', icon: '⚡' },
-  { id: 'res_08', name: 'Knowledge Transfer', category: 'research', type: 'bonus', cost: 6, description: 'Convert 8 Money into 12 Research.', icon: '🎓' },
+  { id: 'res_01', name: 'Eureka Moment', category: 'research', type: 'bonus', cost: 8, description: 'Gain +15 Research immediately.', icon: '💡' },
+  { id: 'res_02', name: 'Stolen Blueprints', category: 'research', type: 'bonus', cost: 9, description: 'Steal 10 Research from the enemy.', icon: '📜' },
+  { id: 'res_03', name: 'Think Tank', category: 'research', type: 'bonus', cost: 6, description: 'Universities produce double this turn.', icon: '🧠' },
+  { id: 'res_04', name: 'Academic Exchange', category: 'research', type: 'bonus', cost: 5, description: 'Gain +10 Research immediately.', icon: '📚' },
+  { id: 'res_05', name: 'Innovation Grant', category: 'research', type: 'bonus', cost: 6, description: 'Gain +8 Research and draw a card.', icon: '🏅' },
+  { id: 'res_06', name: 'Laboratory', category: 'research', type: 'bonus', cost: 3, description: 'Gain +6 Research immediately.', icon: '🔬' },
+  { id: 'res_07', name: 'Breakthrough', category: 'research', type: 'bonus', cost: 8, description: 'Gain +18 Research immediately.', icon: '⚡' },
+  { id: 'res_08', name: 'Knowledge Transfer', category: 'research', type: 'bonus', cost: 5, description: 'Convert 8 Money into 12 Research.', icon: '🎓' },
   { id: 'res_09', name: 'Patent Office', category: 'research', type: 'bonus', cost: 2, description: 'Gain +4 Research immediately.', icon: '📋' },
-  { id: 'res_10', name: 'Research Expedition', category: 'research', type: 'bonus', cost: 8, description: 'Gain +12 Research immediately.', icon: '🧭' },
-  { id: 'res_11', name: 'Science Fair', category: 'research', type: 'bonus', cost: 4, description: 'Gain +5 Research per University you own.', icon: '🏆' },
-  { id: 'res_12', name: 'Ancient Library', category: 'research', type: 'bonus', cost: 6, description: 'Gain +8 Research and +4 Production.', icon: '📖' },
+  { id: 'res_10', name: 'Research Expedition', category: 'research', type: 'bonus', cost: 6, description: 'Gain +12 Research immediately.', icon: '🧭' },
+  { id: 'res_11', name: 'Science Fair', category: 'research', type: 'bonus', cost: 3, description: 'Gain +5 Research per University you own.', icon: '🏆' },
+  { id: 'res_12', name: 'Ancient Library', category: 'research', type: 'bonus', cost: 5, description: 'Gain +8 Research and +4 Production.', icon: '📖' },
 
   // ── Money (12) ──
   { id: 'mon_01', name: 'Tax Collection', category: 'money', type: 'bonus', cost: 6, description: 'Collect 3 Money per territory you own.', icon: '💰' },
@@ -144,23 +144,23 @@ export const CARD_DEFINITIONS = [...BONUS_CARDS, ...EVENT_CARDS];
 // ── Tech Tree ───────────────────────────────────────────────────────
 export const TECH_TREE = {
   military: [
-    { id: 'mil_t1', name: 'Sharpened Blades', cost: 20, description: '+1 to highest attack die', effect: 'attackBonus' },
-    { id: 'mil_t2', name: 'Fortified Walls', cost: 40, description: '+1 to highest defense die', effect: 'defenseBonus' },
-    { id: 'mil_t3', name: 'Double Deploy', cost: 70, description: 'Deploy action gives 2× troops', effect: 'doubleDeploy' },
-    { id: 'mil_t4', name: 'Elite Troops', cost: 100, description: 'Troops cost 50% less to deploy', effect: 'eliteTroops' },
-    { id: 'mil_t5', name: 'Naval Supremacy', cost: 80, description: 'Attack across sea routes between continents', effect: 'intercontinentalCombat' },
+    { id: 'mil_t1', name: 'Sharpened Blades', cost: 15, description: '+1 to highest attack die', effect: 'attackBonus' },
+    { id: 'mil_t2', name: 'Fortified Walls', cost: 30, description: '+1 to highest defense die', effect: 'defenseBonus' },
+    { id: 'mil_t3', name: 'Double Deploy', cost: 53, description: 'Deploy action gives 2× troops', effect: 'doubleDeploy' },
+    { id: 'mil_t4', name: 'Elite Troops', cost: 75, description: 'Troops cost 50% less to deploy', effect: 'eliteTroops' },
+    { id: 'mil_t5', name: 'Naval Supremacy', cost: 60, description: 'Attack across sea routes between continents', effect: 'intercontinentalCombat' },
   ],
   economic: [
-    { id: 'eco_t1', name: 'Improved Structures', cost: 20, description: 'Structures give +1 extra bonus', effect: 'betterStructures' },
-    { id: 'eco_t2', name: 'Prosperous Lands', cost: 40, description: 'Base territory output +1 each', effect: 'betterBase' },
-    { id: 'eco_t3', name: 'Rapid Construction', cost: 70, description: 'Build action constructs 2 structures', effect: 'rapidConstruction' },
-    { id: 'eco_t4', name: 'Trade Routes', cost: 100, description: 'Continent bonuses doubled', effect: 'tradeRoutes' },
+    { id: 'eco_t1', name: 'Improved Structures', cost: 15, description: 'Structures give +1 extra bonus', effect: 'betterStructures' },
+    { id: 'eco_t2', name: 'Prosperous Lands', cost: 30, description: 'Base territory output +1 each', effect: 'betterBase' },
+    { id: 'eco_t3', name: 'Rapid Construction', cost: 53, description: 'Build action constructs 2 structures', effect: 'rapidConstruction' },
+    { id: 'eco_t4', name: 'Trade Routes', cost: 75, description: 'Continent bonuses doubled', effect: 'tradeRoutes' },
   ],
   science: [
-    { id: 'sci_t1', name: 'Expanded Library', cost: 20, description: 'Draw 2 cards per turn instead of 1', effect: 'extraDraw' },
-    { id: 'sci_t2', name: 'Efficient Planning', cost: 40, description: 'Gain a 4th action per turn', effect: 'extraAction' },
-    { id: 'sci_t3', name: 'Advanced Tactics', cost: 70, description: 'Can attack with 4 dice', effect: 'fourDice' },
-    { id: 'sci_t4', name: 'World Domination', cost: 120, description: 'Instant victory — you win!', effect: 'worldDomination' },
+    { id: 'sci_t1', name: 'Expanded Library', cost: 15, description: 'Draw 2 cards per turn instead of 1', effect: 'extraDraw' },
+    { id: 'sci_t2', name: 'Efficient Planning', cost: 30, description: 'Gain a 4th action per turn', effect: 'extraAction' },
+    { id: 'sci_t3', name: 'Advanced Tactics', cost: 53, description: 'Can attack with 4 dice', effect: 'fourDice' },
+    { id: 'sci_t4', name: 'World Domination', cost: 90, description: 'Instant victory — you win!', effect: 'worldDomination' },
   ],
 };
 
