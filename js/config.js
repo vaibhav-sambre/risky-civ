@@ -71,7 +71,7 @@ export const STRUCTURES = {
 
 export const TROOP_DEPLOY_COST = 3;
 
-export const TROOP_UPKEEP_COST = 1.5;
+export const TROOP_UPKEEP_COST = 1;
 
 export const BASE_DEPLOY_COUNT = 3;
 
@@ -101,7 +101,7 @@ export const BONUS_CARDS = [
     "name": "Industrial Revolution",
     "category": "production",
     "type": "bonus",
-    "cost": 10,
+    "cost": 30,
     "description": "All factories produce double this turn.",
     "icon": "🏭"
   },
@@ -110,7 +110,7 @@ export const BONUS_CARDS = [
     "name": "Free Construction",
     "category": "production",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "Build one structure for free.",
     "icon": "🔨"
   },
@@ -119,7 +119,7 @@ export const BONUS_CARDS = [
     "name": "Supply Surge",
     "category": "production",
     "type": "bonus",
-    "cost": 8,
+    "cost": 24,
     "description": "Gain +15 Production immediately.",
     "icon": "📦"
   },
@@ -128,7 +128,7 @@ export const BONUS_CARDS = [
     "name": "Overtime Workers",
     "category": "production",
     "type": "bonus",
-    "cost": 4,
+    "cost": 12,
     "description": "Gain +8 Production immediately.",
     "icon": "👷"
   },
@@ -137,7 +137,7 @@ export const BONUS_CARDS = [
     "name": "Mass Production",
     "category": "production",
     "type": "bonus",
-    "cost": 8,
+    "cost": 24,
     "description": "Deploy troops at half cost this turn.",
     "icon": "🔧"
   },
@@ -146,7 +146,7 @@ export const BONUS_CARDS = [
     "name": "Harvest Festival",
     "category": "production",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "Gain +5 of each resource.",
     "icon": "🎉"
   },
@@ -155,7 +155,7 @@ export const BONUS_CARDS = [
     "name": "Iron Mine",
     "category": "production",
     "type": "bonus",
-    "cost": 4,
+    "cost": 12,
     "description": "Gain +6 Production immediately.",
     "icon": "⛏️"
   },
@@ -164,7 +164,7 @@ export const BONUS_CARDS = [
     "name": "Assembly Line",
     "category": "production",
     "type": "bonus",
-    "cost": 10,
+    "cost": 30,
     "description": "Gain +20 Production immediately.",
     "icon": "🏗️"
   },
@@ -173,7 +173,7 @@ export const BONUS_CARDS = [
     "name": "Salvage Operation",
     "category": "production",
     "type": "bonus",
-    "cost": 2,
+    "cost": 6,
     "description": "Gain +4 Production immediately.",
     "icon": "♻️"
   },
@@ -182,7 +182,7 @@ export const BONUS_CARDS = [
     "name": "Resource Convoy",
     "category": "production",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "Gain +10 Production immediately.",
     "icon": "🚛"
   },
@@ -191,7 +191,7 @@ export const BONUS_CARDS = [
     "name": "Wartime Economy",
     "category": "production",
     "type": "bonus",
-    "cost": 8,
+    "cost": 24,
     "description": "Convert 10 Money into 15 Production.",
     "icon": "⚙️"
   },
@@ -200,7 +200,7 @@ export const BONUS_CARDS = [
     "name": "Blueprint Cache",
     "category": "production",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "Gain +5 Production and +5 Research.",
     "icon": "📐"
   },
@@ -209,7 +209,7 @@ export const BONUS_CARDS = [
     "name": "Eureka Moment",
     "category": "research",
     "type": "bonus",
-    "cost": 8,
+    "cost": 24,
     "description": "Gain +15 Research immediately.",
     "icon": "💡"
   },
@@ -218,7 +218,7 @@ export const BONUS_CARDS = [
     "name": "Stolen Blueprints",
     "category": "research",
     "type": "bonus",
-    "cost": 9,
+    "cost": 27,
     "description": "Steal 10 Research from the enemy.",
     "icon": "📜"
   },
@@ -227,7 +227,7 @@ export const BONUS_CARDS = [
     "name": "Think Tank",
     "category": "research",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "Universities produce double this turn.",
     "icon": "🧠"
   },
@@ -236,7 +236,7 @@ export const BONUS_CARDS = [
     "name": "Academic Exchange",
     "category": "research",
     "type": "bonus",
-    "cost": 5,
+    "cost": 15,
     "description": "Gain +10 Research immediately.",
     "icon": "📚"
   },
@@ -245,7 +245,7 @@ export const BONUS_CARDS = [
     "name": "Innovation Grant",
     "category": "research",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "Gain +8 Research and draw a card.",
     "icon": "🏅"
   },
@@ -254,7 +254,7 @@ export const BONUS_CARDS = [
     "name": "Laboratory",
     "category": "research",
     "type": "bonus",
-    "cost": 3,
+    "cost": 9,
     "description": "Gain +6 Research immediately.",
     "icon": "🔬"
   },
@@ -263,7 +263,7 @@ export const BONUS_CARDS = [
     "name": "Breakthrough",
     "category": "research",
     "type": "bonus",
-    "cost": 8,
+    "cost": 24,
     "description": "Gain +18 Research immediately.",
     "icon": "⚡"
   },
@@ -272,7 +272,7 @@ export const BONUS_CARDS = [
     "name": "Knowledge Transfer",
     "category": "research",
     "type": "bonus",
-    "cost": 5,
+    "cost": 15,
     "description": "Convert 8 Money into 12 Research.",
     "icon": "🎓"
   },
@@ -281,7 +281,7 @@ export const BONUS_CARDS = [
     "name": "Patent Office",
     "category": "research",
     "type": "bonus",
-    "cost": 2,
+    "cost": 6,
     "description": "Gain +4 Research immediately.",
     "icon": "📋"
   },
@@ -290,7 +290,7 @@ export const BONUS_CARDS = [
     "name": "Research Expedition",
     "category": "research",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "Gain +12 Research immediately.",
     "icon": "🧭"
   },
@@ -299,7 +299,7 @@ export const BONUS_CARDS = [
     "name": "Science Fair",
     "category": "research",
     "type": "bonus",
-    "cost": 3,
+    "cost": 9,
     "description": "Gain +5 Research per University you own.",
     "icon": "🏆"
   },
@@ -308,7 +308,7 @@ export const BONUS_CARDS = [
     "name": "Ancient Library",
     "category": "research",
     "type": "bonus",
-    "cost": 5,
+    "cost": 15,
     "description": "Gain +8 Research and +4 Production.",
     "icon": "📖"
   },
@@ -317,7 +317,7 @@ export const BONUS_CARDS = [
     "name": "Tax Collection",
     "category": "money",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "Collect 3 Money per territory you own.",
     "icon": "💰"
   },
@@ -326,7 +326,7 @@ export const BONUS_CARDS = [
     "name": "Economic Boom",
     "category": "money",
     "type": "bonus",
-    "cost": 10,
+    "cost": 30,
     "description": "Gain +20 Money immediately.",
     "icon": "📈"
   },
@@ -335,7 +335,7 @@ export const BONUS_CARDS = [
     "name": "Trade Agreement",
     "category": "money",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "Gain +12 Money immediately.",
     "icon": "🤝"
   },
@@ -344,7 +344,7 @@ export const BONUS_CARDS = [
     "name": "Gold Rush",
     "category": "money",
     "type": "bonus",
-    "cost": 8,
+    "cost": 24,
     "description": "Banks produce double this turn.",
     "icon": "💎"
   },
@@ -353,7 +353,7 @@ export const BONUS_CARDS = [
     "name": "Foreign Investment",
     "category": "money",
     "type": "bonus",
-    "cost": 4,
+    "cost": 12,
     "description": "Gain +8 Money immediately.",
     "icon": "🏦"
   },
@@ -362,7 +362,7 @@ export const BONUS_CARDS = [
     "name": "War Chest",
     "category": "money",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "Gain +10 Money and +5 Production.",
     "icon": "🗃️"
   },
@@ -371,7 +371,7 @@ export const BONUS_CARDS = [
     "name": "Treasure Map",
     "category": "money",
     "type": "bonus",
-    "cost": 4,
+    "cost": 12,
     "description": "Gain +15 Money.",
     "icon": "🗺️"
   },
@@ -380,7 +380,7 @@ export const BONUS_CARDS = [
     "name": "Market Manipulation",
     "category": "money",
     "type": "bonus",
-    "cost": 8,
+    "cost": 24,
     "description": "Steal 8 Money from the enemy.",
     "icon": "🎭"
   },
@@ -389,7 +389,7 @@ export const BONUS_CARDS = [
     "name": "Trade Caravan",
     "category": "money",
     "type": "bonus",
-    "cost": 2,
+    "cost": 6,
     "description": "Gain +5 Money immediately.",
     "icon": "🐫"
   },
@@ -398,7 +398,7 @@ export const BONUS_CARDS = [
     "name": "Royal Treasury",
     "category": "money",
     "type": "bonus",
-    "cost": 10,
+    "cost": 30,
     "description": "Gain +25 Money immediately.",
     "icon": "👑"
   },
@@ -407,7 +407,7 @@ export const BONUS_CARDS = [
     "name": "Merchant Fleet",
     "category": "money",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "Gain +4 Money per Bank you own.",
     "icon": "⛵"
   },
@@ -425,7 +425,7 @@ export const BONUS_CARDS = [
     "name": "Paradrop",
     "category": "military",
     "type": "bonus",
-    "cost": 12,
+    "cost": 36,
     "description": "Deploy 5 troops to any territory you own.",
     "icon": "🪂"
   },
@@ -434,7 +434,7 @@ export const BONUS_CARDS = [
     "name": "Mutiny",
     "category": "military",
     "type": "bonus",
-    "cost": 10,
+    "cost": 30,
     "description": "Enemy weakest territory loses half its troops.",
     "icon": "🏴"
   },
@@ -443,7 +443,7 @@ export const BONUS_CARDS = [
     "name": "Forced March",
     "category": "military",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "Move up to 5 troops between adjacent owned territories.",
     "icon": "🚩"
   },
@@ -452,7 +452,7 @@ export const BONUS_CARDS = [
     "name": "Veteran Troops",
     "category": "military",
     "type": "bonus",
-    "cost": 8,
+    "cost": 24,
     "description": "+1 to all attack dice this turn.",
     "icon": "🎖️"
   },
@@ -461,7 +461,7 @@ export const BONUS_CARDS = [
     "name": "Conscription",
     "category": "military",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "Deploy 3 troops for free to your capital.",
     "icon": "📯"
   },
@@ -470,7 +470,7 @@ export const BONUS_CARDS = [
     "name": "Fortify",
     "category": "military",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "+1 to all defense dice this turn.",
     "icon": "🛡️"
   },
@@ -479,7 +479,7 @@ export const BONUS_CARDS = [
     "name": "Mercenaries",
     "category": "military",
     "type": "bonus",
-    "cost": 12,
+    "cost": 36,
     "description": "Deploy 4 troops for free to any territory.",
     "icon": "💂"
   },
@@ -488,7 +488,7 @@ export const BONUS_CARDS = [
     "name": "Alliance",
     "category": "military",
     "type": "bonus",
-    "cost": 10,
+    "cost": 30,
     "description": "Gain +4 troops in a territory of your choice.",
     "icon": "🤝"
   },
@@ -497,7 +497,7 @@ export const BONUS_CARDS = [
     "name": "Spy Network",
     "category": "military",
     "type": "bonus",
-    "cost": 12,
+    "cost": 36,
     "description": "Steal one card from enemy hand.",
     "icon": "🕵️"
   },
@@ -506,7 +506,7 @@ export const BONUS_CARDS = [
     "name": "Ambush",
     "category": "military",
     "type": "bonus",
-    "cost": 8,
+    "cost": 24,
     "description": "+2 to your highest attack die this turn.",
     "icon": "🏹"
   },
@@ -515,7 +515,7 @@ export const BONUS_CARDS = [
     "name": "Garrison Reinforcement",
     "category": "military",
     "type": "bonus",
-    "cost": 4,
+    "cost": 12,
     "description": "Add +2 troops to all territories with 1 troop.",
     "icon": "🏰"
   },
@@ -524,7 +524,7 @@ export const BONUS_CARDS = [
     "name": "War Banner",
     "category": "military",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "Deploy 2 free troops to your 3 weakest territories.",
     "icon": "🚩"
   },
@@ -533,7 +533,7 @@ export const BONUS_CARDS = [
     "name": "Golden Age",
     "category": "multi",
     "type": "bonus",
-    "cost": 10,
+    "cost": 30,
     "description": "Gain +8 of each resource.",
     "icon": "🌟"
   },
@@ -542,7 +542,7 @@ export const BONUS_CARDS = [
     "name": "Bountiful Harvest",
     "category": "multi",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "Gain +5 of each resource.",
     "icon": "🌾"
   },
@@ -551,7 +551,7 @@ export const BONUS_CARDS = [
     "name": "Diplomatic Victory",
     "category": "multi",
     "type": "bonus",
-    "cost": 10,
+    "cost": 30,
     "description": "An unclaimed territory joins you with 2 troops.",
     "icon": "🕊️"
   },
@@ -560,7 +560,7 @@ export const BONUS_CARDS = [
     "name": "Refugees",
     "category": "multi",
     "type": "bonus",
-    "cost": 4,
+    "cost": 12,
     "description": "Gain +3 troops in your weakest territory.",
     "icon": "🏕️"
   },
@@ -569,7 +569,7 @@ export const BONUS_CARDS = [
     "name": "Festival",
     "category": "multi",
     "type": "bonus",
-    "cost": 4,
+    "cost": 12,
     "description": "Gain +4 of each resource.",
     "icon": "🎊"
   },
@@ -578,7 +578,7 @@ export const BONUS_CARDS = [
     "name": "Peace Treaty",
     "category": "multi",
     "type": "bonus",
-    "cost": 8,
+    "cost": 24,
     "description": "Gain +10 Money and +10 Research.",
     "icon": "📜"
   },
@@ -587,7 +587,7 @@ export const BONUS_CARDS = [
     "name": "Cultural Exchange",
     "category": "multi",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "Gain +6 Research and +6 Money.",
     "icon": "🎭"
   },
@@ -596,7 +596,7 @@ export const BONUS_CARDS = [
     "name": "Nationalization",
     "category": "multi",
     "type": "bonus",
-    "cost": 8,
+    "cost": 24,
     "description": "Gain +3 of each resource per Factory you own.",
     "icon": "🏛️"
   },
@@ -605,7 +605,7 @@ export const BONUS_CARDS = [
     "name": "War Bonds",
     "category": "multi",
     "type": "bonus",
-    "cost": 2,
+    "cost": 6,
     "description": "Gain +3 Production and +3 Money.",
     "icon": "📃"
   },
@@ -614,7 +614,7 @@ export const BONUS_CARDS = [
     "name": "Prosperity",
     "category": "multi",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "Gain +7 Production and +7 Money.",
     "icon": "🌈"
   },
@@ -623,7 +623,7 @@ export const BONUS_CARDS = [
     "name": "Expeditionary Force",
     "category": "multi",
     "type": "bonus",
-    "cost": 10,
+    "cost": 30,
     "description": "Deploy 3 troops and gain +8 Production.",
     "icon": "⚓"
   },
@@ -632,7 +632,7 @@ export const BONUS_CARDS = [
     "name": "Windfall",
     "category": "multi",
     "type": "bonus",
-    "cost": 2,
+    "cost": 6,
     "description": "Gain +3 of each resource.",
     "icon": "🍀"
   },
@@ -641,7 +641,7 @@ export const BONUS_CARDS = [
     "name": "Blitzkrieg",
     "category": "military",
     "type": "bonus",
-    "cost": 12,
+    "cost": 36,
     "description": "Attack one territory for free (costs 0 actions).",
     "icon": "⚡"
   },
@@ -650,7 +650,7 @@ export const BONUS_CARDS = [
     "name": "Scorched Earth",
     "category": "military",
     "type": "bonus",
-    "cost": 10,
+    "cost": 30,
     "description": "Destroy all structures in a selected enemy territory.",
     "icon": "🔥"
   },
@@ -659,7 +659,7 @@ export const BONUS_CARDS = [
     "name": "Draft",
     "category": "military",
     "type": "bonus",
-    "cost": 8,
+    "cost": 24,
     "description": "Gain +1 troop in every territory you own.",
     "icon": "🪖"
   },
@@ -668,7 +668,7 @@ export const BONUS_CARDS = [
     "name": "Naval Blockade",
     "category": "military",
     "type": "bonus",
-    "cost": 10,
+    "cost": 30,
     "description": "Enemy cannot attack across sea routes on their next turn.",
     "icon": "⚓"
   },
@@ -677,7 +677,7 @@ export const BONUS_CARDS = [
     "name": "Supply Chain Optimization",
     "category": "production",
     "type": "bonus",
-    "cost": 8,
+    "cost": 24,
     "description": "Treat all structures as costing 0 production this turn.",
     "icon": "📦"
   },
@@ -686,7 +686,7 @@ export const BONUS_CARDS = [
     "name": "Deforestation",
     "category": "production",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "Gain +30 Production immediately, but effectively lose 1 Money income from your Capital permanently.",
     "icon": "🪓"
   },
@@ -695,7 +695,7 @@ export const BONUS_CARDS = [
     "name": "Urban Sprawl",
     "category": "production",
     "type": "bonus",
-    "cost": 12,
+    "cost": 36,
     "description": "Build up to 2 structures of any type for free.",
     "icon": "🏙️"
   },
@@ -704,7 +704,7 @@ export const BONUS_CARDS = [
     "name": "Brain Drain",
     "category": "research",
     "type": "bonus",
-    "cost": 8,
+    "cost": 24,
     "description": "Steal 20 Research from the enemy.",
     "icon": "🧠"
   },
@@ -713,7 +713,7 @@ export const BONUS_CARDS = [
     "name": "Reverse Engineering",
     "category": "research",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "Gain +30 Research if the enemy has more tech unlocked than you.",
     "icon": "🔧"
   },
@@ -722,7 +722,7 @@ export const BONUS_CARDS = [
     "name": "Space Program",
     "category": "research",
     "type": "bonus",
-    "cost": 12,
+    "cost": 36,
     "description": "Gain +50 Research immediately.",
     "icon": "🚀"
   },
@@ -740,7 +740,7 @@ export const BONUS_CARDS = [
     "name": "War Profiteering",
     "category": "money",
     "type": "bonus",
-    "cost": 6,
+    "cost": 18,
     "description": "Gain +10 Money for every territory you captured this turn.",
     "icon": "💹"
   }
