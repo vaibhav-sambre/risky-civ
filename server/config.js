@@ -1,5 +1,6 @@
-// ── Server-Side Config (CommonJS) ───────────────────────────────────
-// This is a copy of js/config.js without browser-specific exports.
+// ── SINGLE SOURCE OF TRUTH for shared game constants ─────────────────
+// Edit game data HERE. Then run: npm run sync
+// to regenerate js/config.js for the browser.
 
 const PLAYER_COLORS = ['#4A90D9', '#D94A4A'];
 const PLAYER_NAMES = ['Player', 'AI'];

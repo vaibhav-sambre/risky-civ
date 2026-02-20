@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "simulate": "node sim/simulate.mjs"
+    "simulate": "node sim/simulate.mjs",
+    "sync": "node scripts/generate-client-config.js"
   },
   "keywords": [],
   "author": "",

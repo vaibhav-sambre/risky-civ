@@ -1,6 +1,6 @@
 // ── Risky Civ — Main Entry Point ────────────────────────────────────
 
-import { API_URL } from './config.js';
+import { API_URL } from './client-config.js';
 import { renderMap, updateMap, highlightTerritories, clearHighlights } from './map.js';
 import {
     updateLeftPanel, updateCardHand, updateTechTree,
