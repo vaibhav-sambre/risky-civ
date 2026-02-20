@@ -75,7 +75,7 @@ function collectResources(state, playerId) {
         }
     }
 
-    player.resources.production += prodTotal;
+    player.resources.production = prodTotal; // Does not roll over
     player.resources.research += resTotal;
     player.resources.money += monTotal;
 
