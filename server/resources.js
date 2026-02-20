@@ -44,7 +44,7 @@ function collectResources(state, playerId) {
         if (hasEffect(state, playerId, 'doubleBank')) {
             const bankCount = t.structures.filter(s => s === 'bank').length;
             const bankBase = player.techUnlocked.includes('eco_t5') && !hasEffect(state, playerId, 'cyberattack') ? 4 : STRUCTURES.bank.bonus.money;
-        mon += bankCount * bankBase;
+            mon += bankCount * bankBase;
         }
 
         // Embargo: banks produce nothing
@@ -76,22 +76,31 @@ function collectResources(state, playerId) {
         }
     }
 
-    player.resources.production = prodTotal; // Does not roll over
+    player.resources.production = prodTotal + (player.tempEffects['espProd'] || 0); // Does not roll over
     if (player.techUnlocked.includes('sci_t6') && !hasEffect(state, playerId, 'cyberattack')) resTotal *= 2;
-    player.resources.research += resTotal;
-    player.resources.money += monTotal;
+    player.resources.research = resTotal + (player.tempEffects['espRes'] || 0); // Also does not roll over
+    player.resources.money += monTotal + (player.tempEffects['espMon'] || 0);
+
+    player.tempEffects['espProd'] = 0;
+    player.tempEffects['espRes'] = 0;
+    player.tempEffects['espMon'] = 0;
 
     addLog(state, `${player.name} collected +${prodTotal} ⚙️, +${resTotal} 🔬, +${monTotal} 💰`);
-    if (player.techUnlocked.includes('eco_t7') && !hasEffect(state, playerId, 'cyberattack')) {
-        const enemyId = playerId === 0 ? 1 : 0;
-        // Simple implementation: just 10% of this turn's collection. For a better implementation we'd calculate enemy's base, but this is simple.
+
+    const enemyId = playerId === 0 ? 1 : 0;
+    const enemy = state.players[enemyId];
+    if (enemy.techUnlocked.includes('eco_t7') && !hasEffect(state, enemyId, 'cyberattack')) {
         const espProd = Math.floor(prodTotal * 0.1);
         const espRes = Math.floor(resTotal * 0.1);
         const espMon = Math.floor(monTotal * 0.1);
-        state.players[enemyId].resources.production += espProd;
-        state.players[enemyId].resources.research += espRes;
-        state.players[enemyId].resources.money += espMon;
-        if (espProd > 0 || espRes > 0 || espMon > 0) addLog(state, `${state.players[enemyId].name} gained resources from Industrial Espionage!`);
+
+        enemy.tempEffects['espProd'] = (enemy.tempEffects['espProd'] || 0) + espProd;
+        enemy.tempEffects['espRes'] = (enemy.tempEffects['espRes'] || 0) + espRes;
+        enemy.tempEffects['espMon'] = (enemy.tempEffects['espMon'] || 0) + espMon;
+
+        if (espProd > 0 || espRes > 0 || espMon > 0) {
+            addLog(state, `${enemy.name} passively gained resources from Industrial Espionage!`);
+        }
     }
 }
 

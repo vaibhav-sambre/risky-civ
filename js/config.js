@@ -144,23 +144,23 @@ export const CARD_DEFINITIONS = [...BONUS_CARDS, ...EVENT_CARDS];
 // ── Tech Tree ───────────────────────────────────────────────────────
 export const TECH_TREE = {
   military: [
-    { id: 'mil_t1', name: 'Sharpened Blades', cost: 10, description: '+1 to highest attack die', effect: 'attackBonus' },
-    { id: 'mil_t2', name: 'Fortified Walls', cost: 20, description: '+1 to highest defense die', effect: 'defenseBonus' },
-    { id: 'mil_t3', name: 'Double Deploy', cost: 35, description: 'Deploy action gives 2× troops', effect: 'doubleDeploy' },
-    { id: 'mil_t4', name: 'Elite Troops', cost: 50, description: 'Troops cost 50% less to deploy', effect: 'eliteTroops' },
-    { id: 'mil_t5', name: 'Naval Supremacy', cost: 40, description: 'Attack across sea routes between continents', effect: 'intercontinentalCombat' },
+    { id: 'mil_t1', name: 'Sharpened Blades', cost: 20, description: '+1 to highest attack die', effect: 'attackBonus' },
+    { id: 'mil_t2', name: 'Fortified Walls', cost: 40, description: '+1 to highest defense die', effect: 'defenseBonus' },
+    { id: 'mil_t3', name: 'Double Deploy', cost: 70, description: 'Deploy action gives 2× troops', effect: 'doubleDeploy' },
+    { id: 'mil_t4', name: 'Elite Troops', cost: 100, description: 'Troops cost 50% less to deploy', effect: 'eliteTroops' },
+    { id: 'mil_t5', name: 'Naval Supremacy', cost: 80, description: 'Attack across sea routes between continents', effect: 'intercontinentalCombat' },
   ],
   economic: [
-    { id: 'eco_t1', name: 'Improved Structures', cost: 10, description: 'Structures give +1 extra bonus', effect: 'betterStructures' },
-    { id: 'eco_t2', name: 'Prosperous Lands', cost: 20, description: 'Base territory output +1 each', effect: 'betterBase' },
-    { id: 'eco_t3', name: 'Rapid Construction', cost: 35, description: 'Build action constructs 2 structures', effect: 'rapidConstruction' },
-    { id: 'eco_t4', name: 'Trade Routes', cost: 50, description: 'Continent bonuses doubled', effect: 'tradeRoutes' },
+    { id: 'eco_t1', name: 'Improved Structures', cost: 20, description: 'Structures give +1 extra bonus', effect: 'betterStructures' },
+    { id: 'eco_t2', name: 'Prosperous Lands', cost: 40, description: 'Base territory output +1 each', effect: 'betterBase' },
+    { id: 'eco_t3', name: 'Rapid Construction', cost: 70, description: 'Build action constructs 2 structures', effect: 'rapidConstruction' },
+    { id: 'eco_t4', name: 'Trade Routes', cost: 100, description: 'Continent bonuses doubled', effect: 'tradeRoutes' },
   ],
   science: [
-    { id: 'sci_t1', name: 'Expanded Library', cost: 10, description: 'Draw 2 cards per turn instead of 1', effect: 'extraDraw' },
-    { id: 'sci_t2', name: 'Efficient Planning', cost: 20, description: 'Gain a 4th action per turn', effect: 'extraAction' },
-    { id: 'sci_t3', name: 'Advanced Tactics', cost: 35, description: 'Can attack with 4 dice', effect: 'fourDice' },
-    { id: 'sci_t4', name: 'World Domination', cost: 60, description: 'Instant victory — you win!', effect: 'worldDomination' },
+    { id: 'sci_t1', name: 'Expanded Library', cost: 20, description: 'Draw 2 cards per turn instead of 1', effect: 'extraDraw' },
+    { id: 'sci_t2', name: 'Efficient Planning', cost: 40, description: 'Gain a 4th action per turn', effect: 'extraAction' },
+    { id: 'sci_t3', name: 'Advanced Tactics', cost: 70, description: 'Can attack with 4 dice', effect: 'fourDice' },
+    { id: 'sci_t4', name: 'World Domination', cost: 120, description: 'Instant victory — you win!', effect: 'worldDomination' },
   ],
 };
 
