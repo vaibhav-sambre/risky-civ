@@ -245,7 +245,7 @@ async function onDeploy(territoryId, count) {
 }
 
 async function onBuild(territoryId, structureType) {
-    const data = await apiCall(`/api/game/${gameId}/build`, 'POST', { territoryId, structureType });
+    const data = await apiCall(`/api/game/${gameId}/build`, 'POST', { territoryId, type: structureType });
     if (data) {
         updateGameState(data.state);
         hideTerritoryPopup();
