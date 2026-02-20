@@ -34,6 +34,7 @@ function deploy(state, territoryId, count) {
     spendAction(state);
     const success = deployTroops(state, territoryId, count);
     if (!success) {
+        state.actionsRemaining++; // refund action if failed
         return { error: 'Failed to deploy troops' };
     }
     return { state };
@@ -50,6 +51,7 @@ function build(state, territoryId, structureType) {
     spendAction(state);
     const success = buildStructure(state, territoryId, structureType);
     if (!success) {
+        state.actionsRemaining++; // refund action if failed
         return { error: 'Failed to build structure' };
     }
     return { state };
